@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изомеризация глюкозы во фруктозу</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <div class="tab">
+        <div class="tab-nav">
+            <a class="tab-link active" href="#content-1">Исходные данные</a>
+            <a class="tab-link" href="#content-2">Оптимизация параметров</a>
+            <a class="tab-link" href="#content-3">Вывод результатов</a>
+        </div>
+
+        <div class="tab-content active" id="content-1" style="display: block;">
+            <div class="sub-tab-nav">
+                <a class="sub-tab-link active" href="#content-1-1">Ручной ввод</a>
+                <a class="sub-tab-link" href="#content-1-2">Генерация на основе уравнения</a>
+                <a class="sub-tab-link" href="#content-1-3">Снятые с графика данные</a>
+            </div>
+            <div class="sub-tab-content" id="content-1-1" style="display: block;">
+
+                <label for="rowCount" class="label-input">Количество экспериментов:</label>
+                <input type="number" id="rowCount" min="1">
+                <button class="btn" onclick="createTable()">Создать таблицу</button>
+
+                <table class="table" id="table-1">
+                    <thead>
+                        <tr>
+                            <th>Начальная концентрация G0</th>
+                            <th>Температура T</th>
+                            <th>Время t</th>
+                            <th>Текущая концентрация G(t)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <button class="btn btn-next"><a class="tab-link next-1-2" href="#content-2">Переход к оптимизации параметров</a></button>
+            </div>
+            <div class="sub-tab-content" id="content-1-2" style="display: none;">
+                <div class="equation-container">
+                    <p>Уравнение для генерации данных:</p>
+                    <p class="equation">\( y = kx + b \)</p>
+                </div>
+                <div class="form-toggle">
+                    <label for="toggle-form-1" class="label-radio-btn">Используемое решение:</label>
+                    <div class="form-toggle-item item-1" id="toggle-form-1">
+                        <input id="fid-1" type="radio" name="radio" value="numeric" checked>
+                        <label for="fid-1">Численное</label>
+                    </div>
+                    <div class="form-toggle-item item-2">
+                        <input id="fid-2" type="radio" name="radio" value="analytic">
+                        <label for="fid-2">Аналитическое</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="delta" class="label-input">Max значение искусственной погрешности, %:</label>
+                    <input type="number" id="delta">
+                </div>
+
+                <div class="form-group">
+                    <label for="seed" class="label-input">Значение для инициализации ГСЧ:</label>
+                    <input type="number" id="seed">
+                </div>
+
+                <div class="sub-sub-tab-nav">
+                    <a class="sub-sub-tab-link active" href="#content-1-2-1">Настройка генерации</a>
+                    <a class="sub-sub-tab-link" href="#content-1-2-2">Просмотр сгенерированной таблицы</a>
+                 </div>
+
+                <div class="sub-sub-tab-content" id="content-1-2-1" style="display: block;">
+                    <div class="btn-container">
+                        <button class="btn add-row" id="btn-add-row" onclick="addRow()">Добавить вектор генерации</button>
+                        <button class="btn add-row" id="btn-gen-table" onclick="">Сгенерировать таблицу</button>
+                        <button class="btn add-row" id="btn-delete-row" onclick="deleteRows('table-2')">Очистить таблицу</button>
+                    </div>
+                    <table class="table" id="table-2">
+                        <thead>
+                            <tr>
+                                <th>G0</th>
+                                <th>T</th>
+                                <th>Start t</th>
+                                <th>End t</th>
+                                <th>Min h</th>
+                                <th>Max h</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="sub-sub-tab-content" id="content-1-2-2" style="display: none;">
+                    <table class="table" id="table-3">
+                        <thead>
+                            <tr>
+                                <th>Начальная концентрация G0</th>
+                                <th>Температура T</th>
+                                <th>Время t</th>
+                                <th>Текущая концентрация G(t)</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="btn btn-next"><a class="tab-link next-1-2" href="#content-2">Переход к оптимизации параметров</a></button>
+            </div>
+            <div class="sub-tab-content" id="content-1-3" style="display: none;">
+                <img src="graphics.jpg" alt="Графики" width="724" height="148">
+                <table class="table" id="table-4">
+                    <thead>
+                        <tr>
+                            <th>Начальная концентрация G0</th>
+                            <th>Температура T</th>
+                            <th>Время t</th>
+                            <th>Текущая концентрация G(t)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn btn-next"><a class="tab-link next-1-2" href="#content-2">Переход к оптимизации параметров</a></button>
+            </div>
+        </div>
+
+        <div class="tab-content" id="content-2" style="display: none;">
+            <div class="sub-tab-nav">
+                <a class="sub-tab-link" href="#content-2-1">Настройка</a>
+<!--                <a class="sub-tab-link" href="#content-2-2">Результат</a>-->
+            </div>
+            <div class="sub-tab-content" id="content-2-1" style="display: block;">
+                <div class="equation-container">
+                    <p>Уравнение для генерации данных:</p>
+                    <p class="equation">\( y = kx + b \)</p>
+                </div>
+                <div class="two-horizontal-container">
+                    <div class="box form-toggle" style="float: left;">
+                        <label for="toggle-form-2" class="label-radio-btn">Используемое решение:</label>
+                        <div class="form-toggle-item item-1" id="toggle-form-2">
+                            <input id="fid-3" type="radio" name="radio" value="numeric" checked>
+                            <label for="fid-3">Численное</label>
+                        </div>
+                        <div class="form-toggle-item item-2">
+                            <input id="fid-4" type="radio" name="radio" value="analytic">
+                            <label for="fid-4">Аналитическое</label>
+                        </div>
+                    </div>
+                    <div class="box dropdown" style="float: right;">
+                        <label for="algorithm" class="label-radio-btn">Используемый алгоритм оптимизации:</label>
+                        <select id="algorithm" name="algorithm" onchange="getSelectedValue()">
+                            <option value="0" selected>------- выберите алгоритм -------</option>
+                            <option value="1">Градиентный спуск</option>
+                            <option value="2">Стохастический град. спуск</option>
+                            <option value="3">Мини-пакетный стохаст. град. спуск</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="two-horizontal-container">
+                    <div class="box-1 columns" style="float: left;">
+                        <span>Начальные значения параметров</span>
+                        <div class="two-horizontal-container">
+                            <div class="box-1 left-column" style="text-align: right;">
+                                <span style="text-align: right; margin-right: 20px; margin-top: 13px;">Глюкоза</span>
+                                <div class="form-group" id="k1Group">
+                                    <label for="k1" class="label-input"><span class="variable">k<span class="subscript">01</span>:</span></label>
+                                    <input type="number" id="k1">
+                                </div>
+                                <div class="form-group" id="e1Group">
+                                    <label for="e1" class="label-input"><span class="variable">E<span class="subscript">1</span>:</span></label>
+                                    <input type="number" id="e1">
+                                </div>
+                            </div>
+                            <div class="box-1 right-column" style="text-align: right;">
+                                <span style="text-align: right; margin-right: 20px; margin-top: 13px;">Фруктоза</span>
+                                <div class="form-group" id="k2Group">
+                                    <label for="k2" class="label-input"><span class="variable">k<span class="subscript">02</span>:</span></label>
+                                    <input type="number" id="k2">
+                                </div>
+                                <div class="form-group" id="e2Group">
+                                    <label for="e2" class="label-input"><span class="variable">E<span class="subscript">2</span>:</span></label>
+                                    <input type="number" id="e2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group" id="speedGroup">
+                            <label for="speed" class="label-input">Скорость обучения:</label>
+                            <input type="number" id="speed">
+                        </div>
+                        <div class="form-group" id="iterationGroup">
+                            <label for="iteration" class="label-input">Max кол-во итераций:</label>
+                            <input type="number" id="iteration">
+                        </div>
+                    </div>
+                    <div class="box input" style="float: right;">
+                        <div class="form-group" id="seedGroup" style="visibility: hidden;">
+                            <label for="seed-2" class="label-input">Значение для ГСЧ:</label>
+                            <input type="number" id="seed-2">
+                        </div>
+
+                        <div class="form-group" id="stopGroup" style="visibility: hidden;">
+                            <label for="stop" class="label-input">Условие остановки:</label>
+                            <input type="number" id="stop">
+                        </div>
+
+                        <div class="form-group" id="packageGroup" style="visibility: hidden;">
+                            <label for="package" class="label-input">Размер пакета:</label>
+                            <input type="number" id="package">
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-next"><a class="tab-link next-2-3" href="#content-3">Начать оптимизацию</a></button>
+            </div>
+<!--            <div class="sub-tab-content" id="content-2-2" style="display: block;">-->
+<!--                -->
+<!--            </div>-->
+        </div>
+
+        <div class="tab-content" id="content-3" style="display: none;">
+            <div class="sub-tab-nav">
+                <a class="sub-tab-link active" href="#content-3-1">Результаты</a>
+                <a class="sub-tab-link" href="#content-3-2">Графики</a>
+            </div>
+            <div class="sub-tab-content" id="content-3-1" style="display: block;">
+                <p>Эталонные параметры:</p>
+                <ul class="markers">
+                    <li><span class="variable">k<span class="subscript">01</span></span> = 0</li>
+                    <li><span class="variable">E<span class="subscript">1</span></span> = 0</li>
+                    <li><span class="variable">k<span class="subscript">02</span></span> = 0</li>
+                    <li><span class="variable">E<span class="subscript">2</span></span> = 0</li>
+                </ul>
+                <div class="container-p-btn">
+                    <p><span class="variable">Функция потерь для эталонных параметров</span> = 0</p>
+                    <div class="btn-container-left">
+                            <button class="btn add-row margin" id="btn-delete-row-2" onclick="deleteRows('table-5')">Очистить таблицу</button>
+                    </div>
+                </div>
+<!--                <button class="btn add-row margin" id="btn-delete-row-2" onclick="deleteRows('table-5')">Очистить таблицу</button>-->
+                <table class="table-icon" id="table-5">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>№</th>
+                            <th>Метод решения</th>
+                            <th>Алгоритм</th>
+                            <th>k<span class="subscript">01</span></th>
+                            <th>E<span class="subscript">1</span></th>
+                            <th>k<span class="subscript">02</span></th>
+                            <th>E<span class="subscript">2</span></th>
+                            <th>Ф. потерь</th>
+                            <th>Δ</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td onclick="openGraphic()" style="cursor: pointer;"><img src="graphic-icon.png" alt="Просмотр графика" class="icon"></td>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                            <td>7</td>
+                            <td>8</td>
+                            <td onclick="deleteOneRow(this)" style="cursor: pointer;"><img src="delete-icon.png" alt="Удаление" class="icon"></td>
+                        </tr>
+                        <tr>
+                            <td onclick="openGraphic()" style="cursor: pointer;"><img src="graphic-icon.png" alt="Просмотр графика" class="icon"></td>
+                            <td>01</td>
+                            <td>11</td>
+                            <td>21</td>
+                            <td>31</td>
+                            <td>41</td>
+                            <td>51</td>
+                            <td>61</td>
+                            <td>71</td>
+                            <td>81</td>
+                            <td onclick="deleteOneRow(this)" style="cursor: pointer;"><img src="delete-icon.png" alt="Удаление" class="icon"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="sub-tab-content" id="content-3-2" style="display: block;">
+                3-2
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" async></script>
+</body>
+</html>
