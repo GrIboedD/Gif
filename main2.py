@@ -89,35 +89,32 @@ def generate_data(seed):
     x = []
     y = []
     # цикл генерации данных
-    !for g0 in [10, 15, 20]:
-        time = 0
-        while time <= 40:
-            x.append([g0, 323.15, time])
-            g = find_g(k0_1, en1, k0_2, en2, g0, time)
-            # имитируем погрешность измерений в 5 процентов максимум
-            g += g * np.random.uniform(-0.05, 0.05)
-            y.append(g)
-            # увеличиваем время на случайное число от 1 до 5
-            time += np.random.randint(1, 6)
+    for g0 in [10, 15, 20]:
+        for T in [323.15, 333.15, 343.15]:
+            time = 0
+            while time <= 40:
+                x.append([g0, T, time])
+                g = find_g(k0_1, en1, k0_2, en2, g0, T, time)
+                # имитируем погрешность измерений в 5 процентов максимум
+                g += g * np.random.uniform(-0.05, 0.05)
+                y.append(g)
+                # увеличиваем время на случайное число от 1 до 5
+                time += np.random.randint(1, 6)
     return x, y
 
 
 def main():
-    # Проверка работы метода Рунге-Кутты
-    g = find_g(1, 0, 1, 0, 20, 20, 40)
-    print("Если допустить, что k1 и k2 = 1, то G -> G0/2 (производная в такой точке будет равна 0)")
-    print(f"G0 = 20, G(40) = {g:.3}\n")
     x, y = generate_data(42)
     real_parameters = [5.91e5, 10733, 2.07, 2224]
     real_lost = loss_function(*real_parameters, x, y)
     print(f"\nЭталонные параметры: k0_1 = {real_parameters[0]:.3e}, en1 = {real_parameters[1]:.3e}, k0_2 = {real_parameters[2]:.3e}, en2 = {real_parameters[3]:.3e}")
     print(f"Функция потерь для эталонных параметров: {real_lost:.3}")
 
-    initial_parameters = [1, 1, 1, 1]
-    alpha = 0.004
-    n_iter = 1000
+    initial_parameters = [3, 1, 1, 1]
+    alpha = 0.0001
+    n_iter = 100
     batch_size = 20
-    n_no_change = 1000
+    n_no_change = 100
 
     parameters_gd = gradient_descent_lf(loss_function, initial_parameters, alpha, n_iter, x, y)
     lost_gd = loss_function(*parameters_gd, x, y)
@@ -137,61 +134,63 @@ def main():
     print(f"Функция потерь для оптимизированных параметров: {lost_mbsgd:.3}")
     print(f"Дельта: {lost_mbsgd - real_lost:.3}\n")
 
-    # # Построение графиков
-    # t_10 = []
-    # g_10 = []
-    # t_15 = []
-    # g_15 = []
-    # t_20 = []
-    # g_20 = []
-    # for i in range(len(x)):
-    #     if x[i][0] == 10:
-    #         t_10.append(x[i][2])
-    #         g_10.append(y[i])
-    #     elif x[i][0] == 15:
-    #         t_15.append(x[i][2])
-    #         g_15.append(y[i])
-    #     else:
-    #         t_20.append(x[i][2])
-    #         g_20.append(y[i])
-    # fig, ax = plt.subplots()
-    # ax.scatter(t_10, g_10, c="b", s=30)
-    # ax.scatter(t_15, g_15, c="r", s=30)
-    # ax.scatter(t_20, g_20, c="g", s=30)
-    # t = np.linspace(0, 45, 100)
-    # g_10_gd = []
-    # g_15_gd = []
-    # g_20_gd = []
-    # g_10_sgd = []
-    # g_15_sgd = []
-    # g_20_sgd = []
-    # g_10_mbsgd = []
-    # g_15_mbsgd = []
-    # g_20_mbsgd = []
-    # for i in range(len(t)):
-    #     g_10_gd.append(find_g(*parameters_gd, 10, 323.15, t[i]))
-    #     g_15_gd.append(find_g(*parameters_gd, 15, 323.15, t[i]))
-    #     g_20_gd.append(find_g(*parameters_gd, 20, 323.15, t[i]))
-    #
-    #     g_10_sgd.append(find_g(*parameters_sgd, 10, 323.15, t[i]))
-    #     g_15_sgd.append(find_g(*parameters_sgd, 15, 323.15, t[i]))
-    #     g_20_sgd.append(find_g(*parameters_sgd, 20, 323.15, t[i]))
-    #
-    #     g_10_mbsgd.append(find_g(*parameters_mbsgd, 10, 323.15, t[i]))
-    #     g_15_mbsgd.append(find_g(*parameters_mbsgd, 15, 323.15, t[i]))
-    #     g_20_mbsgd.append(find_g(*parameters_mbsgd, 20, 323.15, t[i]))
-    #
-    # plt.plot(t, g_10_gd, color='r', linewidth=2)
-    # plt.plot(t, g_15_gd, color='r', linewidth=2)
-    # plt.plot(t, g_20_gd, color='r', linewidth=2)
-    #
-    # plt.plot(t, g_10_sgd, color='b', linewidth=2)
-    # plt.plot(t, g_15_sgd, color='b', linewidth=2)
-    # plt.plot(t, g_20_sgd, color='b', linewidth=2)
-    #
-    # plt.plot(t, g_10_mbsgd, color='g', linewidth=2)
-    # plt.plot(t, g_15_mbsgd, color='g', linewidth=2)
-    # plt.plot(t, g_20_mbsgd, color='g', linewidth=2)
-    #
-    # ax.set(xlim=[0, 45], ylim=[0, 25], xlabel='time', ylabel='G')
-    # plt.show()
+    # Построение графиков
+    t_10 = []
+    g_10 = []
+    t_15 = []
+    g_15 = []
+    t_20 = []
+    g_20 = []
+    for i in range(len(x)):
+        if x[i][1] == 323.15:
+            if x[i][0] == 10:
+                t_10.append(x[i][2])
+                g_10.append(y[i])
+            elif x[i][0] == 15:
+                t_15.append(x[i][2])
+                g_15.append(y[i])
+            else:
+                t_20.append(x[i][2])
+                g_20.append(y[i])
+    fig, ax = plt.subplots()
+    ax.scatter(t_10, g_10, c="b", s=30)
+    ax.scatter(t_15, g_15, c="r", s=30)
+    ax.scatter(t_20, g_20, c="g", s=30)
+    t = np.linspace(0, 45, 100)
+    g_10_gd = []
+    g_15_gd = []
+    g_20_gd = []
+    g_10_sgd = []
+    g_15_sgd = []
+    g_20_sgd = []
+    g_10_mbsgd = []
+    g_15_mbsgd = []
+    g_20_mbsgd = []
+    for i in range(len(t)):
+        g_10_gd.append(find_g(*parameters_gd, 10, 323.15, t[i]))
+        g_15_gd.append(find_g(*parameters_gd, 15, 323.15, t[i]))
+        g_20_gd.append(find_g(*parameters_gd, 20, 323.15, t[i]))
+
+        g_10_sgd.append(find_g(*parameters_sgd, 10, 323.15, t[i]))
+        g_15_sgd.append(find_g(*parameters_sgd, 15, 323.15, t[i]))
+        g_20_sgd.append(find_g(*parameters_sgd, 20, 323.15, t[i]))
+
+        g_10_mbsgd.append(find_g(*parameters_mbsgd, 10, 323.15, t[i]))
+        g_15_mbsgd.append(find_g(*parameters_mbsgd, 15, 323.15, t[i]))
+        g_20_mbsgd.append(find_g(*parameters_mbsgd, 20, 323.15, t[i]))
+
+    plt.plot(t, g_10_gd, color='r', linewidth=2)
+    plt.plot(t, g_15_gd, color='r', linewidth=2)
+    plt.plot(t, g_20_gd, color='r', linewidth=2)
+
+    plt.plot(t, g_10_sgd, color='b', linewidth=2)
+    plt.plot(t, g_15_sgd, color='b', linewidth=2)
+    plt.plot(t, g_20_sgd, color='b', linewidth=2)
+
+    plt.plot(t, g_10_mbsgd, color='g', linewidth=2)
+    plt.plot(t, g_15_mbsgd, color='g', linewidth=2)
+    plt.plot(t, g_20_mbsgd, color='g', linewidth=2)
+
+    ax.set(xlim=[0, 45], ylim=[0, 25], xlabel='time', ylabel='G')
+    plt.show()
+main()

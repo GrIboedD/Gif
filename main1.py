@@ -186,3 +186,4 @@ def main():
 
     ax.set(xlim=[0, 45], ylim=[0, 25], xlabel='time', ylabel='G')
     plt.show()
+main()
