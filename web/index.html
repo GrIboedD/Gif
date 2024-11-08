@@ -10,6 +10,7 @@
 
 <div class="container">
     <div class="tab">
+
         <div class="tab-nav">
             <a class="tab-link active" href="#content-1">Исходные данные</a>
             <a class="tab-link" href="#content-2">Оптимизация параметров</a>
@@ -22,8 +23,8 @@
                 <a class="sub-tab-link" href="#content-1-2">Генерация на основе уравнения</a>
                 <a class="sub-tab-link" href="#content-1-3">Снятые с графика данные</a>
             </div>
-            <div class="sub-tab-content" id="content-1-1" style="display: block;">
 
+            <div class="sub-tab-content" id="content-1-1" style="display: block;">
                 <label for="rowCount" class="label-input">Количество экспериментов:</label>
                 <input type="number" id="rowCount" min="1">
                 <button class="btn" onclick="createTable()">Создать таблицу</button>
@@ -41,11 +42,13 @@
                 </table>
                 <button class="btn btn-next"><a class="tab-link next-1-2" href="#content-2">Переход к оптимизации параметров</a></button>
             </div>
+
             <div class="sub-tab-content" id="content-1-2" style="display: none;">
                 <div class="equation-container">
                     <p>Уравнение для генерации данных:</p>
                     <p class="equation">\( y = kx + b \)</p>
                 </div>
+
                 <div class="form-toggle">
                     <label for="toggle-form-1" class="label-radio-btn">Используемое решение:</label>
                     <div class="form-toggle-item item-1" id="toggle-form-1">
@@ -57,6 +60,7 @@
                         <label for="fid-2">Аналитическое</label>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label for="delta" class="label-input">Max значение искусственной погрешности, %:</label>
                     <input type="number" id="delta">
@@ -92,6 +96,7 @@
                         <tbody></tbody>
                     </table>
                 </div>
+
                 <div class="sub-sub-tab-content" id="content-1-2-2" style="display: none;">
                     <table class="table" id="table-3">
                         <thead>
@@ -107,6 +112,7 @@
                 </div>
                 <button class="btn btn-next"><a class="tab-link next-1-2" href="#content-2">Переход к оптимизации параметров</a></button>
             </div>
+
             <div class="sub-tab-content" id="content-1-3" style="display: none;">
                 <img src="graphics.jpg" alt="Графики" width="724" height="148">
                 <table class="table" id="table-4">
@@ -142,11 +148,13 @@
                 <a class="sub-tab-link" href="#content-2-1">Настройка</a>
 <!--                <a class="sub-tab-link" href="#content-2-2">Результат</a>-->
             </div>
+
             <div class="sub-tab-content" id="content-2-1" style="display: block;">
                 <div class="equation-container">
                     <p>Уравнение для генерации данных:</p>
                     <p class="equation">\( y = kx + b \)</p>
                 </div>
+
                 <div class="two-horizontal-container">
                     <div class="box form-toggle" style="float: left;">
                         <label for="toggle-form-2" class="label-radio-btn">Используемое решение:</label>
@@ -169,6 +177,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="two-horizontal-container">
                     <div class="box-1 columns" style="float: left;">
                         <span>Начальные значения параметров</span>
@@ -196,6 +205,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="form-group" id="speedGroup">
                             <label for="speed" class="label-input">Скорость обучения:</label>
                             <input type="number" id="speed">
@@ -205,6 +215,7 @@
                             <input type="number" id="iteration">
                         </div>
                     </div>
+
                     <div class="box input" style="float: right;">
                         <div class="form-group" id="seedGroup" style="visibility: hidden;">
                             <label for="seed-2" class="label-input">Значение для ГСЧ:</label>
@@ -234,6 +245,7 @@
                 <a class="sub-tab-link active" href="#content-3-1">Результаты</a>
                 <a class="sub-tab-link" href="#content-3-2">Графики</a>
             </div>
+
             <div class="sub-tab-content" id="content-3-1" style="display: block;">
                 <p>Эталонные параметры:</p>
                 <ul class="markers">
@@ -295,6 +307,7 @@
                     </tbody>
                 </table>
             </div>
+
             <div class="sub-tab-content" id="content-3-2" style="display: block;">
                 3-2
             </div>

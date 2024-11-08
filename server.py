@@ -11,3 +11,4 @@ def say_hello():
 eel.init('web')
 # Запуск приложения
 eel.start('index.html', size=(500, 500))
+

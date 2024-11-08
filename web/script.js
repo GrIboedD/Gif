@@ -12,7 +12,7 @@ document.querySelectorAll('.tab-link').forEach(link => {
 
         if (this.className === 'tab-link next-1-2') {
             secondTab.classList.add('active');
-        } else if (this.className === 'tab-link next-3-1'){
+        } else if (this.className === 'tab-link next-2-3'){
             thirdTab.classList.add('active');
         } else {
             this.classList.add('active');
