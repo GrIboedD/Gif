@@ -9,14 +9,18 @@ def gradient(function, parameters, argument_increment=1e-06):
     :param argument_increment: значение приращения аргумента (не обязательно)
     :return:
     """
-    gradient = np.zeros_like(parameters)
+    gradient = []
+    for _ in range(len(parameters)):
+        gradient.append(0)
     for i in range(len(parameters)):
         parameters_h_plus = parameters.copy()
         parameters_h_minus = parameters.copy()
         parameters_h_plus[i] += argument_increment
         parameters_h_minus[i] -= argument_increment
-        gradient[i] = (function(*parameters_h_plus) - function(*parameters_h_minus)) / (2 * argument_increment)
-    return gradient
+        fun_plus = function(*parameters_h_plus)
+        fun_minus = function(*parameters_h_minus)
+        gradient[i] = (fun_plus - fun_minus) / (2 * argument_increment)
+    return np.array(gradient)
 
 def gradient_lf(loss_function, parameters, X, Y, argument_increment=1e-06):
     """
@@ -28,16 +32,18 @@ def gradient_lf(loss_function, parameters, X, Y, argument_increment=1e-06):
         :param argument_increment: значение приращения аргумента (не обязательно)
         :return:
         """
-    gradient = np.zeros_like(parameters)
+    gradient = []
+    for _ in range(len(parameters)):
+        gradient.append(0)
     for i in range(len(parameters)):
         parameters_h_plus = parameters.copy()
         parameters_h_minus = parameters.copy()
         parameters_h_plus[i] += argument_increment
         parameters_h_minus[i] -= argument_increment
-        gradient[i] = ((loss_function(*parameters_h_plus, X, Y) -
-                        loss_function(*parameters_h_minus, X, Y))
-                       / (2 * argument_increment))
-    return gradient
+        fun_plus = loss_function(*parameters_h_plus, X, Y)
+        fun_minus = loss_function(*parameters_h_minus, X, Y)
+        gradient[i] = float((fun_plus - fun_minus) / (2 * argument_increment))
+    return np.array(gradient)
 
 
 def gradient_descent(function, initial_parameters, alpha, n_iter, epsilon=1e-06):
@@ -160,7 +166,7 @@ def stochastic_gradient_descent_lf(loss_function, initial_parameters, alpha, n_i
         pb.print_progress_bar(i)
     return best_parameters
 
-def minibatch_stochastic_gradient_descent_lf(loss_function, initial_parameters, alpha, n_iter, X, Y, batch_size, epsilon=1e-06, max_n_iter_no_change = 10, seed = 0):
+def minibatch_stochastic_gradient_descent_lf(loss_function, initial_parameters, alpha, n_iter, X, Y, batch_size, epsilon=1e-06, max_n_iter_no_change = 10, seed = 0, suppress_stdout = False):
     """
     Алгоритм градиентного спуска для поиска локального минимума функции потерь
     :param loss_function: функция потерь, минимум которой необходимо найти
@@ -185,8 +191,9 @@ def minibatch_stochastic_gradient_descent_lf(loss_function, initial_parameters, 
     shuffled_X = X[indices]
     shuffled_Y = Y[indices]
     start = 0
-    print("Расчет оптимальных параметров методом мини-пакетного стохастического градиентного спуска")
-    pb = ProgressBar(total=n_iter-1, prefix='Progress', suffix='Complete', length=50)
+    if not suppress_stdout:
+        print("Расчет оптимальных параметров методом мини-пакетного стохастического градиентного спуска")
+        pb = ProgressBar(total=n_iter-1, prefix='Progress', suffix='Complete', length=50)
     n_iter_no_change = 0
     for i in range(n_iter):
         if start >= len(X):
@@ -205,11 +212,13 @@ def minibatch_stochastic_gradient_descent_lf(loss_function, initial_parameters, 
         if loss + epsilon > best_loss:n_iter_no_change += 1
         else: n_iter_no_change = 0
         if n_iter_no_change >= max_n_iter_no_change:
-            pb.print_progress_bar(n_iter - 1)
-            print(f"Досрочный выход. n_iter = {i}")
+            if not suppress_stdout:
+                pb.print_progress_bar(n_iter - 1)
+                print(f"Досрочный выход. n_iter = {i}")
             break
         if loss < best_loss:
             best_loss = loss
             best_parameters = parameters.copy()
-        pb.print_progress_bar(i)
+        if not suppress_stdout:
+            pb.print_progress_bar(i)
     return best_parameters
